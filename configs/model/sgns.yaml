@@ -1,0 +1,5 @@
+name: "sgns"
+embedding_dim: 150
+negative_samples: 5
+# 3/4 exponent for negative sampling distribution
+neg_sampling_power: 0.75

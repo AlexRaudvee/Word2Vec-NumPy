@@ -1,0 +1,6 @@
+name: "wikitext-2"
+root_dir: "data"
+vocab_size: 20000
+min_count: 1
+max_window_size: 5
+lowercase: true

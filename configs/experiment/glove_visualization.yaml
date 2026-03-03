@@ -1,0 +1,4 @@
+evaluation_type: "visualization"
+
+model:
+  name: glove

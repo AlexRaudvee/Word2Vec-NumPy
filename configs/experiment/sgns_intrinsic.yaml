@@ -1,0 +1,4 @@
+evaluation_type: "intrinsic"
+
+model:
+  name: sgns

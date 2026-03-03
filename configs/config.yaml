@@ -1,0 +1,21 @@
+defaults:
+  - data: wikitext2
+  - model: sgns
+  - training: base
+  - experiment: sgns_default
+  - _self_
+
+# Global settings
+seed: 1
+device: "cpu"   # just practical placeholder 
+
+# Shared paths
+paths:
+  checkpoint_dir: "checkpoints"
+  assets_dir: "assets"
+
+evaluation:
+  men_path: "data/MEN/MEN_dataset_natural_form_full"
+  msr_path: "data/msr/msr.txt"
+  ag_news_dir: "data/ag_news"
+  pca_num_words: 500
