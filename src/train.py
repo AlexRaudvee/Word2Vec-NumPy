@@ -49,7 +49,7 @@ def main(cfg: DictConfig) -> None:
     # print(f"Loaded {len(train_lines)} lines from training data.")
     # print(train_lines)
     tokenized = tokenize_corpus(train_lines, lowercase=cfg.data.lowercase)
-    print(f"Tokenized training data. {tokenized}")
+    # print(f"Tokenized training data. {tokenized}")
     vocab = Vocabulary(
         max_size=cfg.data.vocab_size,
         min_count=cfg.data.min_count,
@@ -57,7 +57,7 @@ def main(cfg: DictConfig) -> None:
     vocab.build(tokenized)
     # print(f"Vocabulary built. Size: {len(vocab)}. vocab: {vocab}")
     encoded_sequences = [vocab.encode_sequence(toks) for toks in tokenized]
-    print(f"Encoded training data into indices. {encoded_sequences}")
+    # print(f"Encoded training data into indices. {encoded_sequences}")
 
 
     # model selection
@@ -101,11 +101,16 @@ def main(cfg: DictConfig) -> None:
 
     elif cfg.model.name == "glove":
 
+        print(f"Encoded sequences: {encoded_sequences}")
         rows, cols, vals = build_cooccurrence_triplets(
             sequences=encoded_sequences,
             max_window_size=cfg.data.max_window_size,
         )
 
+        print("min:", vals.min())
+        print("median:", np.median(vals))
+        print("mean:", vals.mean())
+        print("max:", vals.max())
         # print(f"co-occurence triplets build: ")
         # print(f"rows: {rows}")
         # print(f"cols: {cols}")
@@ -135,9 +140,7 @@ def main(cfg: DictConfig) -> None:
     else:
         raise ValueError("Unknown model type.")
 
-    # -------------------------
-    # 3. Save Model
-    # -------------------------
+    # Save Model
     save_checkpoint(
         model=model,
         vocab=vocab,
@@ -145,9 +148,7 @@ def main(cfg: DictConfig) -> None:
         model_name=cfg.model.name,
     )
 
-    # -------------------------
-    # 4. Evaluation
-    # -------------------------
+    # Evaluation
     os.makedirs("assets", exist_ok=True)
     evaluate_model(model, vocab, training_metrics)
 

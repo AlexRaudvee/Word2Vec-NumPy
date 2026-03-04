@@ -1,4 +1,4 @@
 name: "glove"
 embedding_dim: 150
-xmax: 100.0
+xmax: 100
 alpha: 0.75

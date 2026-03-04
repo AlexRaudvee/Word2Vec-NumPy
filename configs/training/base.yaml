@@ -1,7 +1,7 @@
-batch_size: 32
-epochs: 5
-learning_rate: 0.05
+batch_size: 2048
+epochs: 50
+learning_rate: 0.01
 adagrad_epsilon: 1e-8
-log_every: 1
+log_every: 1000
 memory_log_every_steps: 1
 save_dir: "checkpoints"

@@ -65,7 +65,7 @@ def evaluate_model(model, vocab, metrics: TrainingMetrics):
             continue
 
         idx = vocab.word2idx[word]
-        neighbors = most_similar(embeddings, idx, top_k=5)
+        neighbors = most_similar(embeddings, idx, top_k=10)
 
         print(f"\nNearest neighbors for '{word}':")
         for i, sim in neighbors:

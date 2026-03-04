@@ -71,18 +71,20 @@ class GloVeModel(BaseEmbeddingModel):
             (x / self.xmax) ** self.alpha,
             1.0,
         )  # (B,)
+        # print(f"f_x: {f_x}")
 
         # predictions: dot + biases
         dots = np.sum(w_i * w_j, axis=1)  # (B,)
-        log_x = np.log(x + 1e-8)          # (B,)
+        log_x = np.log(x + 1)          # (B,)
         diff = dots + b_i + b_j - log_x   # (B,)
+        # print(f"diff: {diff}")
 
         #loss: J = sum f(x) * diff^2
         loss_per = f_x * (diff ** 2)      # (B,)
         loss = float(np.mean(loss_per))
 
         #gradient wrt diff: g = dJ/d(diff) = 2 f(x) diff
-        g = 2.0 * f_x * diff / B          # (B,) normalized by batch
+        g = 2.0 * f_x * diff         # (B,) normalized by batch
 
         #gradients container
         grads = self.zero_grad_like()

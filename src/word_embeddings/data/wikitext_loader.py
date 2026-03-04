@@ -12,7 +12,7 @@ def read_wikitext2(root_dir: str) -> dict[str, Iterable[str]]:
     """
     root = Path(root_dir) / "wikitext-2"
     splits = {
-        "train": root / "train_.txt", # train_.txt for debug purpooses
+        "train": root / "train.txt", # train_.txt for debug purpooses
         "valid": root / "valid.txt",
         "test": root / "test.txt",
     }

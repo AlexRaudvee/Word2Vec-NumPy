@@ -1,8 +1,8 @@
 defaults:
   - data: wikitext2
-  - model: sgns
+  - model: glove
   - training: base
-  - experiment: sgns_default
+  - experiment: glove_visualization # only used during evaluation 
   - _self_
 
 # Global settings

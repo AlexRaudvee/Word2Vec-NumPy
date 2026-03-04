@@ -19,20 +19,23 @@ def build_cooccurrence_triplets(
         col_indices: np.ndarray[int32]
         values: np.ndarray[float32]
     """
-    cooc: Dict[Tuple[int, int], float] = defaultdict(float)
+    cooc = defaultdict(float)
 
     for seq in sequences:
         L = len(seq)
+
         for center_pos in range(L):
             center = seq[center_pos]
-            window = max_window_size  # fixed window for GloVe (still OK)
-            left = max(0, center_pos - window)
-            right = min(L - 1, center_pos + window)
+
+            left = max(0, center_pos - max_window_size)
+            right = min(L - 1, center_pos + max_window_size)
+
             for ctx_pos in range(left, right + 1):
                 if ctx_pos == center_pos:
                     continue
+
                 context = seq[ctx_pos]
-                cooc[(center, context)] += 1.0
+                cooc[(center, context)] += 1
 
     rows: List[int] = []
     cols: List[int] = []
@@ -42,7 +45,7 @@ def build_cooccurrence_triplets(
         rows.append(i)
         cols.append(j)
         vals.append(v)
-
+        # print(f"Co-occurrence ({i}, {j}): {v}")
     return (
         np.array(rows, dtype=np.int32),
         np.array(cols, dtype=np.int32),
