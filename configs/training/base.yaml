@@ -1,6 +1,6 @@
 batch_size: 2048
 epochs: 50
-learning_rate: 0.01
+learning_rate: 0.05
 adagrad_epsilon: 1e-8
 log_every: 1000
 memory_log_every_steps: 1
