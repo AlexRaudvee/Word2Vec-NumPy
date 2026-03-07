@@ -27,10 +27,92 @@ NumPy-based word embedding project (SGNS and GloVe) managed with `uv` for enviro
   - Optimizes a weighted least-squares objective with `xmax` and `alpha` weighting hyperparameters.
   - Best aligned with capturing global corpus co-occurrence structure.
 
-## Results
+## Results and Discussion
 
+#### Training Behaviour
 
-## Discussion
+The training dynamics of the GloVe model are shown on [this figure](assets/training_loss_GloVeModel.png), where the loss rapidly decreases during the early iterations and stabilizes after approximately 50–100 logged steps. This behaviour indicates that the model successfully converges toward the optimal solution. The GloVe objective aims to approximate the log of word co-occurrence counts through the dot product of word vectors and bias terms, using a weighting function to reduce the influence of extremely frequent or rare co-occurrences.
+
+The final loss values are relatively small (0.002). This is expected because the optimization objective minimizes a squared regression error rather than a probabilistic likelihood, meaning the loss approaches zero once the vector dot products approximate the log-co-occurrence statistics. Overall, the loss curve demonstrates stable convergence without evidence of divergence or unstable training. 
+
+In contrast, the [SGNS model](assets/training_loss_SGNSModel.png) shows a noisier training curve where the loss fluctuates between approximately 2.1 and 2.6 while gradually decreasing. This behaviour is typical for SGNS because the model is trained as a binary classifier that distinguishes true word–context pairs from randomly sampled negative pairs using a logistic loss. Each training step uses randomly sampled negative examples, which introduces stochasticity into the gradient updates and causes the loss to fluctuate rather than smoothly converge. Despite these fluctuations, the overall downward trend of the curve indicates that the model is successfully learning meaningful word representations.
+
+#### Computational Efficiency
+
+The efficiency of the implementation was evaluated by measuring both memory usage during training and training time per epoch, shown in [this](assets/training_memory_GloVeModel.png) and [this](assets/training_memory_SGNSModel.png) figures
+
+Memory consumption in case with [GloVe model](assets/training_memory_GloVeModel.png) remains relatively stable between approximately 130 MB and 320 MB. Periodic spikes occur due to batch processing and temporary allocation of intermediate arrays during gradient updates. Despite these fluctuations, the overall memory footprint remains modest given the vocabulary size and embedding dimensionality used in the experiments. In case with SGNS model we can see even more stable behaviour and lover MB usage (around 150 MB). This can be explained by the training mechanism of SGNS, where the model updates only a small subset of embeddings at each iteration through negative sampling. Instead of computing gradients over the entire vocabulary, the algorithm compares one positive word–context pair with a small number of randomly sampled negative examples. As a result, each training step updates only $K+1$ vectors rather than all vocabulary vectors, significantly reducing the computational cost and memory requirements
+
+With GloVe model [raining time per epoch](assets/training_time_per_epoch_GloVeModel.png) averages roughly 120–130 seconds, with occasional increases to approximately 170–180 seconds in later epochs. These variations likely arise from operating system scheduling and temporary memory allocation overhead. In the case of the SGNS model, the training time per epoch is noticeably higher and shows a different pattern compared to GloVe. As illustrated in [this figure](assets/training_time_per_epoch_SGNSModel.png), the first epochs require approximately 680–730 seconds, indicating a relatively stable training time during the early stage of optimization. However, starting from around epoch 6, the training time increases significantly to roughly 980–1060 seconds per epoch (prabably because of stochastic nature of the negative sampling training procedure, which introduce variability in runtime across epochs). Nevertheless, the training process remains computationally manageable, demonstrating that both SGNS and GloVe can be implemented efficiently using vectorized NumPy operations even without GPU acceleration.
+
+However it is wort to mention that GloVe model requires higher amount of epochs and batch size to produce more less meaningfull embedings, while SGNS model was trained only on 7 epochs and performs quite closely to GloVe.
+
+#### Intrinsic Evaluation
+
+Intrinsic evaluation measures how well the embeddings capture semantic relationships between words.
+
+**Word Similarity**
+
+The models were evaluated using the MEN similarity dataset, which measures correlation between cosine similarity of word vectors and human similarity judgments.
+
+| Model	| Spearman Correlation |
+|---|---|
+| GloVe	| 0.269 |
+| SGNS	| 0.152 |
+
+The results indicate that GloVe significantly outperforms SGNS on semantic similarity. This difference is consistent with the underlying design of the two models. GloVe learns embeddings by factorizing global co-occurrence statistics, while SGNS learns representations by predicting nearby context words through local training signals. As a result, GloVe tends to capture global semantic relationships more effectively
+
+**Analogy Task**
+
+The embeddings were also evaluated on the MSR analogy dataset, which measures whether linear relationships between word vectors encode semantic or syntactic analogies.
+
+| Model	| Accuracy |
+|---|---|
+|GloVe |	2.08% |
+| SGNS |	1.95% |
+
+Both models achieve relatively low analogy accuracy. This result is expected because the WikiText-2 corpus used for training is relatively small compared to datasets typically used for word embedding training. Analogy tasks usually require very large corpora to learn reliable linear relationships between word vectors
+
+**Nearest Neighbour Analysis**
+
+Nearest-neighbour inspection provides qualitative insight into the semantic structure of the embeddings. For GloVe, many semantic clusters appear coherent. For example:
+
+king -> henry, charles, edward
+
+queen -> elizabeth, victoria
+
+france -> germany, italy, spain
+
+These results indicate that the model captures historical and geopolitical relationships.
+
+SGNS also captures some meaningful relationships, such as:
+
+king -> queen, lord
+
+france -> germany, italy
+
+However, several neighbours appear less semantically coherent (e.g., unrelated proper nouns), suggesting weaker global structure compared to GloVe
+
+#### Extrinsic Evaluation
+
+Extrinsic evaluation measures how useful the learned embeddings are for downstream tasks. In this work, embeddings were evaluated using the AG News text classification dataset
+
+|Model | Accuracy | Macro F1 |
+|---|---|---|
+|GloVe | 0.765 | 0.764 |
+|SGNS | 0.650 | 0.648 |
+
+The results show that GloVe embeddings significantly outperform SGNS in the downstream classification task. This suggests that embeddings trained using global co-occurrence statistics may encode semantic information that is more useful for document-level tasks, however, the training time is also higher
+
+One possible explanation is that GloVe explicitly models global co-occurrence structure, while SGNS focuses primarily on predicting local context words through negative sampling. Negative sampling reduces computational cost by contrasting positive word pairs with randomly sampled negative examples rather than computing probabilities over the entire vocabulary
+
+While this approach makes SGNS highly efficient, it may also limit the amount of global statistical information captured by the embeddings
+
+#### Embedding Space Visualization
+
+The PCA visualizations of the embedding spaces are shown on the following figures: [GloVe](assets/pca_glove.png), [SGNS](assets/pca_sgns.png)
+
+The GloVe visualization shows a relatively well distributed embedding space, where words form several small clusters representing semantic categories. This indicates that the model has learned more less meaningful global structure. In contrast, the SGNS visualization shows a denser central cluster, suggesting that many word vectors are concentrated near the origin of the embedding space. This may indicate weaker separation between semantic groups (which is makes sense because model wasn't trained for a longer time). As an example, in both cases we can see that digits like 1,2,3 are clustered together, same happens with punctuation marks like "." and ",". This indicated that our models learn meaningfull embeding space, and therefore on larger corpus and with higher amount of training steps we can obtain usable embedding space.
 
 
 ## Project Overview
