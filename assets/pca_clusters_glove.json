@@ -1,0 +1,55 @@
+{
+  "gender_family": [
+    "man",
+    "woman",
+    "men",
+    "women",
+    "boy",
+    "girl",
+    "king",
+    "queen",
+    "father",
+    "mother"
+  ],
+  "numbers": [
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+    "ten"
+  ],
+  "countries": [
+    "france",
+    "germany",
+    "spain",
+    "italy",
+    "china",
+    "japan",
+    "india",
+    "america"
+  ],
+  "tech": [
+    "computer",
+    "software",
+    "internet",
+    "data",
+    "network",
+    "code",
+    "system"
+  ],
+  "sports": [
+    "football",
+    "soccer",
+    "basketball",
+    "baseball",
+    "tennis",
+    "team",
+    "game",
+    "player"
+  ]
+}

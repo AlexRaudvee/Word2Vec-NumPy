@@ -133,7 +133,7 @@ While this approach makes SGNS highly efficient, it may also limit the amount of
 
 The PCA visualizations of the embedding spaces are shown on the image above. (left for GloVe and right for SGNS)
 
-The GloVe visualization shows a relatively well distributed embedding space, where words form several small clusters representing semantic categories. This indicates that the model has learned more less meaningful global structure. In contrast, the SGNS visualization shows a denser central cluster, suggesting that many word vectors are concentrated near the origin of the embedding space. This may indicate weaker separation between semantic groups (which is makes sense because model wasn't trained for a longer time). As an example, in both cases we can see that digits like 1,2,3 are clustered together, same happens with punctuation marks like "." and ",". This indicated that our models learn meaningfull embeding space, and therefore on larger corpus and with higher amount of training steps we can obtain usable embedding space.
+The GloVe visualization shows a relatively well distributed embedding space, where words form several small clusters representing semantic categories (numbers, contries). This indicates that the model has learned more less meaningful global structure. The SGNS visualization shows a bit better clusters, suggesting that it learns new embedding space more efficiently with its objective. As an example, in both cases we can see that digits like 1,2,3 are clustered together, same happens with countries. This indicated that our models learn meaningfull embeding space, and therefore on larger corpus and with higher amount of training steps we can obtain highly usable embedding space.
 
 
 ## Project Overview
