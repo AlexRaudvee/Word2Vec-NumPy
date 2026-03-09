@@ -7,7 +7,7 @@ set -e
 uv run python src/train.py model=sgns training.learning_rate=0.02
 
 # train glove model
-uv run python src/train.py model=glove training.learning_rate=0.01
+uv run python src/train.py model=glove training.learning_rate=0.05
 
 # intrinsic evaluation
 uv run python src/evaluate_intrinsic.py experiment=sgns_intrinsic model=sgns

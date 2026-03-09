@@ -1,8 +1,7 @@
-from __future__ import annotations
 import numpy as np
 from dataclasses import dataclass
 
-from ..models import EmbeddingParams
+from word_embeddings.models import EmbeddingParams
 
 
 @dataclass

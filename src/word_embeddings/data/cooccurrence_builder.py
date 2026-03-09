@@ -1,6 +1,5 @@
-from __future__ import annotations
 from collections import defaultdict
-from typing import Iterable, Dict, Tuple, List
+from typing import Iterable, Tuple, List
 
 import numpy as np
 

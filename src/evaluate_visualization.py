@@ -1,7 +1,3 @@
-# src/evaluate_visualization.py
-
-from __future__ import annotations
-
 import json
 import os
 from pathlib import Path

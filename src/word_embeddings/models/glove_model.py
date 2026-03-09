@@ -1,6 +1,3 @@
-# src/word_embeddings/models/glove_model.py
-from __future__ import annotations
-
 import numpy as np
 
 from .base_embedding import BaseEmbeddingModel, EmbeddingParams

@@ -1,8 +1,7 @@
-from __future__ import annotations
 import numpy as np
 from dataclasses import dataclass
 
-from ..utils import uniform_init
+from word_embeddings.utils import uniform_init
 
 
 @dataclass

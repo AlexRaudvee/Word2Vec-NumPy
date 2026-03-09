@@ -1,5 +1,3 @@
-# src/word_embeddings/inference.py
-
 import os
 import json
 import numpy as np
